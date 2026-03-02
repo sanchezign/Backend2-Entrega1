@@ -1,69 +1,125 @@
-Implementación completa de una **API REST de e-commerce** con productos, carritos, persistencia en **MongoDB Atlas**, paginación profesional, vistas Handlebars y lógica avanzada de gestión de carritos.
+# Backend II - Entrega N°1  
+**CRUD de Usuarios + Autenticación y Autorización con JWT y Passport**
 
-![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=flat-square&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-4.18-blue?style=flat-square&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=flat-square&logo=mongodb&logoColor=white)
-![Mongoose](https://img.shields.io/badge/Mongoose-8.x-orange?style=flat-square)
-![Handlebars](https://img.shields.io/badge/Handlebars-7.x-orange?style=flat-square)
-![Socket.IO](https://img.shields.io/badge/Socket.IO-real--time-010101?style=flat-square&logo=socket.io)
+Proyecto desarrollado para la **Entrega N°1** del curso Backend II
 
-## Objetivos cumplidos ✓
+Implementación completa de:
+- Modelo de Usuario con todos los campos requeridos
+- Encriptación de contraseña con bcrypt
+- Estrategia Passport "current" con JWT desde cookie httpOnly
+- Login con generación de token JWT
+- Ruta protegida `/api/sessions/current`
+- CRUD completo de usuarios protegido con JWT + rol admin para delete
+- Creación automática de carrito al registrar usuario
 
-- Persistencia principal en **MongoDB Atlas** (productos y carritos)
-- Endpoints completos y RESTful para productos y carritos (CRUD total)
-- **Paginación, ordenamiento y filtros avanzados** en GET /api/products
-  - Parámetros: `limit`, `page`, `sort` (asc/desc), `query` (JSON o string)
-- Formato de respuesta profesional y consistente:
-  - `status`, `payload`, `totalPages`, `prevPage`, `nextPage`, `hasPrevPage`, `hasNextPage`, `prevLink`, `nextLink`
-- Gestión completa de carritos:
-  - Crear carrito vacío
-  - Agregar / eliminar / actualizar cantidades / reemplazar productos
-  - Vaciar carrito
-  - **Populate** automático de productos en todas las consultas
-- Vistas Handlebars funcionales y responsivas:
-  - `/` → página principal / bienvenida
-  - `/products` → lista paginada con filtros básicos
-  - `/products/:pid` → detalle de producto
-  - `/carts/:cid` → vista del carrito con productos detallados
-- Uso intensivo de `.lean()` para mejor rendimiento en vistas
-- Código limpio, modular y escalable (routers separados, managers, models)
-- Validaciones en managers + manejo de errores claro
-- Preparado para Socket.IO (real-time updates en productos/carritos)
+## Tecnologías utilizadas
 
+- Node.js + Express
+- MongoDB Atlas + Mongoose + mongoose-paginate-v2
+- JWT (jsonwebtoken) + Passport + passport-jwt
+- bcrypt
+- cookie-parser
+- express-handlebars
+- Socket.IO (heredado)
 
-1. **Clonar el repositorio**
+## Instalación
+
+1. Clonar repositorio
    ```bash
-   git clone https://github.com/sanchezign/Backend.Proyecto.Final.git
-   cd Backend.Proyecto.Final  
+   git clone https://github.com/sanchezign/Backend2-Entrega1.git
+   cd Backend2-Entrega1
 
-2. **Instalar dependencias** 
+Instalar dependenciasBashnpm install
+Crear .env (copia de .env.example)envPORT=8080
+MONGO_URL=mongodb+srv://<user>:<pass>@cluster0.xxx.mongodb.net/backend-entrega1
+JWT_SECRET=tu_clave_secreta_muy_larga_y_segura_2025
+IniciarBashnpm start
 
-       npm install
+→ http://localhost:8080
+Endpoints clave cumpliendo consigna
 
-Crear y configurar .env
 
-Copia .env.example a .env y completa:
-    envPORT=8080
-    MONGO_URL=mongodb+srv://<usuario>:<contraseña>@cluster0.xxx.mongodb.net/backend-final?retryWrites=true&w=majority
 
-Iniciar el servidor
 
-    Bashnpm start
-    # o con nodemon (recomendado)
-    npm run dev
-    → Servidor corriendo en: http://localhost:8080
 
--Todos los endpoints respetan formato RESTful
 
--Se usa .lean() en consultas para vistas → mejor rendimiento
 
--Populate automático en carritos → productos completos sin consultas extra
 
--Paginación con links funcionales (prevLink, nextLink)
 
--Validaciones básicas en managers + manejo de errores
 
--Preparado para escalar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MétodoRutaDescripciónAutenticaciónPOST/api/sessions/registerRegistro (crea carrito automáticamente)PúblicaPOST/api/sessions/loginLogin → JWT en cookie httpOnlyPúblicaGET/api/sessions/currentDatos del usuario logueado (estrategia "current")JWTGET/api/sessions/logoutElimina cookiePúblicaGET/api/usersLista usuariosJWTGET/api/users/:uidUsuario por IDJWTPOST/api/usersCrea usuario (solo admin)JWT + adminPUT/api/users/:uidActualiza usuarioJWTDELETE/api/users/:uidElimina usuarioJWT + admin
+Puntos de la consigna cumplidos
+
+ Modelo User con todos los campos + email único + role default 'user'
+ Encriptación con bcrypt.hashSync
+ Estrategias Passport configuradas para el modelo
+ Login con JWT + cookie httpOnly
+ Ruta /api/sessions/current con estrategia "current"
+ Validación segura (401 si token inválido/inexistente)
+ Creación automática de carrito al registrar
+ CRUD completo de usuarios protegido
+
+Notas adicionales
+
+Vista /products pública con paginación y botones condicionales
+Solo admin puede eliminar productos/usuarios
+Código modular (routers, managers, models)
+Preparado para real-time con Socket.IO
 
 
 
