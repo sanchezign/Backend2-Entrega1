@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import mongoose from 'mongoose';
 
 export default class ProductManager {
   static #instance;
@@ -8,67 +9,80 @@ export default class ProductManager {
     return this.#instance;
   }
 
-  async getProducts(queryOptions = {}) {
-    const { limit = 10, page = 1, sort, query } = queryOptions;
+  async getProducts(filter = {}, options = {}) {
+    try {
+      const defaultOptions = {
+        limit: Number(options.limit) || 10,
+        page: Number(options.page) || 1,
+        lean: options.lean ?? true,
+        sort: options.sort || { price: 1 },
+      };
 
-    const filter = {};
-    if (query) {
-      if (query.category) filter.category = query.category;
-      if (query.status !== undefined) filter.status = query.status;
+      console.log('[DEBUG ProductManager] Filtro:', filter);
+      console.log('[DEBUG ProductManager] Opciones:', defaultOptions);
+
+      const result = await Product.paginate(filter, defaultOptions);
+
+      console.log('[DEBUG ProductManager] Resultado paginate:', {
+        docsLength: result.docs.length,
+        totalDocs: result.totalDocs,
+        page: result.page,
+        totalPages: result.totalPages,
+      });
+
+      return result;  // ← objeto crudo de paginate (docs, totalDocs, etc.)
+    } catch (error) {
+      console.error('[ERROR ProductManager.getProducts]', error.message);
+      throw error;
     }
-
-    const options = {
-      limit: Number(limit),
-      page: Number(page),
-      sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
-      lean: true  // ← Convierte a POJO para Handlebars
-    };
-
-    const result = await Product.paginate(filter, options);
-
-    return {
-      status: 'success',
-      payload: result.docs,
-      totalPages: result.totalPages,
-      prevPage: result.prevPage,
-      nextPage: result.nextPage,
-      page: result.page,
-      hasPrevPage: result.hasPrevPage,
-      hasNextPage: result.hasNextPage,
-      prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}${sort ? `&sort=${sort}` : ''}${query ? `&query=${JSON.stringify(query)}` : ''}` : null,
-      nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}${sort ? `&sort=${sort}` : ''}${query ? `&query=${JSON.stringify(query)}` : ''}` : null
-    };
   }
 
   async create(productoRaw) {
-    const required = ['title', 'description', 'code', 'price', 'stock', 'category'];
-    for (const campo of required) {
-      if (!productoRaw[campo] || productoRaw[campo].toString().trim() === '') {
-        throw new Error(`El campo ${campo} es obligatorio`);
+    try {
+      const required = ['title', 'description', 'code', 'price', 'stock', 'category'];
+      for (const campo of required) {
+        if (!productoRaw[campo] || String(productoRaw[campo]).trim() === '') {
+          throw new Error(`El campo ${campo} es obligatorio y no puede estar vacío`);
+        }
       }
+
+      const codeExists = await Product.findOne({ code: productoRaw.code.trim() });
+      if (codeExists) {
+        throw new Error(`El código ${productoRaw.code} ya está en uso`);
+      }
+
+      const nuevo = new Product({
+        title: String(productoRaw.title).trim(),
+        description: String(productoRaw.description).trim(),
+        code: String(productoRaw.code).trim(),
+        price: Number(productoRaw.price),
+        stock: Number(productoRaw.stock),
+        category: String(productoRaw.category).trim(),
+        status: productoRaw.status ?? true,
+        thumbnails: Array.isArray(productoRaw.thumbnails) ? productoRaw.thumbnails : []
+      });
+
+      return await nuevo.save();
+    } catch (error) {
+      throw new Error(`Error al crear producto: ${error.message}`);
     }
-
-    const nuevo = new Product({
-      title: productoRaw.title.trim(),
-      description: productoRaw.description.trim(),
-      code: productoRaw.code.trim(),
-      price: Number(productoRaw.price),
-      stock: Number(productoRaw.stock),
-      category: productoRaw.category.trim(),
-      thumbnails: productoRaw.thumbnails || []
-    });
-
-    return await nuevo.save();
   }
 
   async getById(id) {
-    return await Product.findById(id).lean();  // ←Convierte a POJO para vistas
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error('ID de producto inválido');
+    }
+    return await Product.findById(id).lean();
   }
 
   async delete(id) {
-    const product = await Product.findById(id);
-    if (!product) throw new Error('Producto no encontrado');
-    await Product.findByIdAndDelete(id);
-    return true;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error('ID de producto inválido');
+    }
+    const deleted = await Product.findByIdAndDelete(id);
+    if (!deleted) {
+      throw new Error('Producto no encontrado');
+    }
+    return deleted;
   }
 }
