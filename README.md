@@ -1,137 +1,71 @@
-# Backend Proyecto Final.
+Implementación completa de una **API REST de e-commerce** con productos, carritos, persistencia en **MongoDB Atlas**, paginación profesional, vistas Handlebars y lógica avanzada de gestión de carritos.
 
-Proyecto final del curso **Programación Backend I: Desarrollo Avanzado de Backend**. 
-Implementación completa de una API de productos y carritos con persistencia en **MongoDB Atlas**, paginación profesional, ordenamiento, filtros, vistas Handlebars y gestión completa de carritos.
+![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=flat-square&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4.18-blue?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=flat-square&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-8.x-orange?style=flat-square)
+![Handlebars](https://img.shields.io/badge/Handlebars-7.x-orange?style=flat-square)
+![Socket.IO](https://img.shields.io/badge/Socket.IO-real--time-010101?style=flat-square&logo=socket.io)
 
-![Node.js](https://img.shields.io/badge/Node.js-20.x-green)  
-![Express](https://img.shields.io/badge/Express-4.18-blue)  
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)  
-![Mongoose](https://img.shields.io/badge/Mongoose-8.0-orange)  
-![Handlebars](https://img.shields.io/badge/Handlebars-7.1-orange)
-
-Tecnologías principales
-
-    Node.js + Express
-    MongoDB Atlas + Mongoose (populate, lean, paginate-v2)
-    express-handlebars (vistas)
-    dotenv (variables de entorno)
-    Socket.IO (preparado para real-time)
-
-## Objetivos cumplidos. ✓
+## Objetivos cumplidos ✓
 
 - Persistencia principal en **MongoDB Atlas** (productos y carritos)
-- Endpoints completos para productos y carritos (GET, POST, PUT, DELETE)
-- **Paginación, ordenamiento y filtros** en GET /api/products (limit, page, sort, query)
-- Formato de respuesta profesional: status, payload, totalPages, prevLink, nextLink, etc.
-- Gestión avanzada de carritos: agregar/eliminar/actualizar cantidades/productos, vaciar carrito
-- **Populate** en carritos para traer productos completos
-- Vistas Handlebars:
-  - `/` → página de bienvenida
-  - `/products` → lista paginada con botones "Ver detalle" y "Agregar al carrito"
+- Endpoints completos y RESTful para productos y carritos (CRUD total)
+- **Paginación, ordenamiento y filtros avanzados** en GET /api/products
+  - Parámetros: `limit`, `page`, `sort` (asc/desc), `query` (JSON o string)
+- Formato de respuesta profesional y consistente:
+  - `status`, `payload`, `totalPages`, `prevPage`, `nextPage`, `hasPrevPage`, `hasNextPage`, `prevLink`, `nextLink`
+- Gestión completa de carritos:
+  - Crear carrito vacío
+  - Agregar / eliminar / actualizar cantidades / reemplazar productos
+  - Vaciar carrito
+  - **Populate** automático de productos en todas las consultas
+- Vistas Handlebars funcionales y responsivas:
+  - `/` → página principal / bienvenida
+  - `/products` → lista paginada con filtros básicos
   - `/products/:pid` → detalle de producto
-  - `/carts/:cid` → vista del carrito específico
-- Uso de `.lean()` para rendimiento en vistas
-- Código modular, limpio y escalable (routers, managers, models)
-- Validaciones en managers + manejo de errores
+  - `/carts/:cid` → vista del carrito con productos detallados
+- Uso intensivo de `.lean()` para mejor rendimiento en vistas
+- Código limpio, modular y escalable (routers separados, managers, models)
+- Validaciones en managers + manejo de errores claro
+- Preparado para Socket.IO (real-time updates en productos/carritos)
 
-## Estructura de carpetas
 
-```text
-Backend.Proyecto.Final/
-├── package.json
-├── .gitignore
-├── .env.example               
-├── README.md
-└── src/
-    ├── app.js                 # Servidor principal + conexión Mongo + rutas vistas
-    ├── managers/              # Lógica de negocio (ProductManager y CartManager)
-    │   ├── ProductManager.js
-    │   └── CartManager.js
-    ├── models/                # Esquemas Mongoose
-    │   ├── Product.js
-    │   └── Cart.js
-    ├── routers/               # Rutas API separadas
-    │   ├── productsRouter.js
-    │   └── cartsRouter.js
-    └── views/                 # Plantillas Handlebars
-        ├── layouts/
-        │   └── main.handlebars
-        ├── home.handlebars
-        ├── products.handlebars
-        ├── productDetail.handlebars
-        └── cart.handlebars 
-```
-## Instalación. (paso a paso)
-
-1. **Clonar el repositorio.**  
+1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/backend-proyecto-final.git
-   cd backend-proyecto-final
+   git clone https://github.com/sanchezign/Backend.Proyecto.Final.git
+   cd Backend.Proyecto.Final  
 
-2. **Instalar dependencias.** 
+2. **Instalar dependencias** 
 
        npm install
 
-4. **Crear archivo .env en la raíz del proyecto.** 
- 
-       Crea un archivo llamado .env y pega tu cadena de conexión de MongoDB Atlas.
+Crear y configurar .env
 
-5. **Iniciar el servidor.** 
- 
-       npm start
+Copia .env.example a .env y completa:
+    envPORT=8080
+    MONGO_URL=mongodb+srv://<usuario>:<contraseña>@cluster0.xxx.mongodb.net/backend-final?retryWrites=true&w=majority
 
-6. **Abrir en el navegador.**
- 
-       Página principal: http://localhost:8080
+Iniciar el servidor
 
-7. **Endpoints clave.**
-  
-  Productos:
+    Bashnpm start
+    # o con nodemon (recomendado)
+    npm run dev
+    → Servidor corriendo en: http://localhost:8080
 
-   GET /api/products :
-   
-    Lista productos con paginación, ordenamiento y filtros.
+-Todos los endpoints respetan formato RESTful
 
-   POST /api/products :
-    
-    Crea un producto nuevo.
+-Se usa .lean() en consultas para vistas → mejor rendimiento
 
-  Parámetros:
-  
-    limit → cantidad por página (default: 10)
-    page → número de página (default: 1)
-    sort → asc / desc por precio (default: sin orden)
-    query → filtro JSON (ej: {"category":"electronics"} o {"status":true}) 
+-Populate automático en carritos → productos completos sin consultas extra
 
-   Carritos
+-Paginación con links funcionales (prevLink, nextLink)
 
-    POST /api/carts
-    Crea un carrito vacío → devuelve el nuevo carrito con _id.
-    GET /api/carts
-    Lista todos los carritos (con populate de productos).
-    GET /api/carts/:cid
-    Obtiene un carrito específico (con populate).
-    POST /api/carts/:cid/products/:pid
-    Agrega un producto al carrito.
-    DELETE /api/carts/:cid/products/:pid
-    Elimina un producto del carrito.
-    PUT /api/carts/:cid
-    Actualiza todos los productos del carrito.
-    PUT /api/carts/:cid/products/:pid
-    Actualiza cantidad de un producto específico.
-    DELETE /api/carts/:cid
-    Vacía el carrito. 
+-Validaciones básicas en managers + manejo de errores
 
-   Vistas Handlebars
+-Preparado para escalar.
 
-    GET / → Página de bienvenida
-    GET /products → Lista paginada de productos
-    GET /products/:pid → Detalle de producto
-    GET /carts/:cid → Vista del carrito
 
-    
-
-  
 
 
 
