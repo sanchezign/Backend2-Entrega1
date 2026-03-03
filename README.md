@@ -1,9 +1,7 @@
 # Backend II - Entrega N°1  
 **CRUD de Usuarios + Autenticación y Autorización con JWT y Passport**
 
-Proyecto desarrollado para la **Entrega N°1** del curso Backend II
-
-Implementación completa de:
+Implementación completa de:  
 - Modelo de Usuario con todos los campos requeridos
 - Encriptación de contraseña con bcrypt
 - Estrategia Passport "current" con JWT desde cookie httpOnly
@@ -45,36 +43,37 @@ Implementación completa de:
 
 
 
-Endpoints clave:
+## Endpoints clave:
 
-Método,Ruta,Descripción,Autenticación  
-POST,/api/sessions/register,Registro (crea carrito automáticamente),Pública  
-POST,/api/sessions/login,Login → JWT en cookie httpOnly,Pública  
-GET,/api/sessions/current,"Datos del usuario logueado (estrategia ""current"")",JWT  
-GET,/api/sessions/logout,Elimina cookie,Pública  
-GET,/api/users,Lista usuarios,JWT  
-GET,/api/users/:uid,Usuario por ID,JWT  
-POST,/api/users,Crea usuario (solo admin),JWT + admin  
-PUT,/api/users/:uid,Actualiza usuario,JWT  
-DELETE,/api/users/:uid,Elimina usuario,JWT + admin  
+  Método,Ruta,Descripción,Autenticación  
+  POST,/api/sessions/register,Registro (crea carrito automáticamente),Pública  
+  POST,/api/sessions/login,Login → JWT en cookie httpOnly,Pública  
+  GET,/api/sessions/current,"Datos del usuario logueado (estrategia ""current"")",JWT  
+  GET,/api/sessions/logout,Elimina cookie,Pública  
+  GET,/api/users,Lista usuarios,JWT  
+  GET,/api/users/:uid,Usuario por ID,JWT  
+  POST,/api/users,Crea usuario (solo admin),JWT + admin  
+  PUT,/api/users/:uid,Actualiza usuario,JWT  
+  DELETE,/api/users/:uid,Elimina usuario,JWT + admin  
 
-Puntos de la consigna:  
+## Puntos de la consigna:  
 
-Modelo User con todos los campos + email único + role default 'user'  
- Encriptación con bcrypt.hashSync  
- Estrategias Passport configuradas para el modelo  
- Login con JWT + cookie httpOnly  
- Ruta /api/sessions/current con estrategia "current"  
- Validación segura (401 si token inválido/inexistente)  
- Creación automática de carrito al registrar  
- CRUD completo de usuarios protegido  
+  Modelo User con todos los campos + email único + role default 'user'  
+  Encriptación con bcrypt.hashSync  
+  Estrategias Passport configuradas para el modelo  
+  Login con JWT + cookie httpOnly  
+  Ruta /api/sessions/current con estrategia "current"  
+  Validación segura (401 si token inválido/inexistente)  
+  Creación automática de carrito al registrar  
+  CRUD completo de usuarios protegido  
 
-Notas adicionales:
+## Notas adicionales:
 
-Vista /products pública con paginación y botones condicionales  
-Solo admin puede eliminar productos/usuarios  
-Código modular (routers, managers, models)  
-Preparado para real-time con Socket.IO  
+  Vista /products pública con paginación y botones condicionales  
+  Solo admin puede eliminar productos/usuarios  
+  Código modular (routers, managers, models)  
+  Preparado para real-time con Socket.IO  
+
 
 
 
